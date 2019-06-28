@@ -19,8 +19,13 @@ aggregator = torch.FloatTensor([
 def e_to_v(x, matrix):
     return matrix @ x
 
-id3 = torch.LongTensor([
-    i for i in range(n_atoms * n_atoms)
-    if i not in set([j*n_atoms + j for j in range(n_atoms)])
-])
+id3 = []
+for i in range(n_atoms):
+    for j in range(n_atoms):
+        if i != j :
+            id3.append(i * n_atoms + j)          
 
+def remove_self_edges(features):
+    return torch.index_select(features, 0, id3)
+
+print(remove_self_edges(v_to_e(features, id1, id2)))
